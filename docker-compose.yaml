@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  nginx:
+    build:
+      context: ./flask-app/nginx.conf/
+      dockerfile: dockerfile
+    ports:
+        - "80:80"
+    networks:
+      - foodtruck-net
+    depends_on:
+      - app
+    volumes:
+      - ./flask-app/nginx.conf/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./flask-app/static:/static
+      - ./flask-app/templates:/templates
+      
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile.multistage
+    depends_on:
+      - elastic-search
+    networks:
+      - foodtruck-net
+    ports:
+      - "5000:5000"
+
+  elastic-search:
+    image: elasticsearch:7.17.0
+    hostname: es
+    environment:
+      - discovery.type=single-node
+    networks:
+      - foodtruck-net
+
+networks:
+  foodtruck-net:
+    driver: bridge
