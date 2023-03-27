@@ -37,5 +37,5 @@ In order to build the app you will need:
 
 (3) pip install -r requirements.txt
 
-After building you can start the app by running `python ./app.py`
+You can use this app by activating the `init.sh` script.
 
